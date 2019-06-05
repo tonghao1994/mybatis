@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间指向对应的接口-->
+<mapper namespace="net.wanho.mapper.UserMapper">
+
+    <!--id对应接口中的方法名
+    parameterType参数类型
+    -->
+    <insert id="add" parameterType="User">
+        INSERT INTO USER  VALUES (NULL ,#{username},#{password})
+    </insert>
+
+    <insert id="returnKey" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO USER  VALUES (NULL ,#{username},#{password})
+    </insert>
+
+    <insert id="returnKey2">
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            SELECT  last_insert_id()
+        </selectKey>
+        INSERT INTO USER  VALUES (NULL ,#{username},#{password})
+    </insert>
+
+    <update id="update" parameterType="User">
+        UPDATE user set username=#{username} WHERE id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="User">
+        DELETE FROM USER WHERE id=(#{id})
+    </delete>
+
+    <resultMap id="userMap" type="User">
+        <id column="id" property="id"/>
+        <result column="NAME" property="username"/>
+        <result column="password" property="password"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="userMap">
+        select
+         id,
+         username NAME,
+         password
+         FROM
+         USER
+    </select>
+
+    <select id="selectUserByName" resultType="net.wanho.entity.User">
+        SELECT * FROM user WHERE username=#{username}
+    </select>
+
+    <!--第一种方法：SELECT * FROM USER WHERE username LIKE #{username}-->
+    <select id="selectUserByUsername" resultType="net.wanho.entity.User">
+        SELECT * FROM USER WHERE username LIKE "%${value}%"
+    </select>
+
+    <select id="findUser" resultType="net.wanho.entity.User">
+
+    </select>
+
+    <select id="selectUserByUsernameAndPswd" resultType="net.wanho.entity.User">
+        SELECT * FROM user WHERE username=#{username} and password=#{password}
+    </select>
+
+</mapper>
